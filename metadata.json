@@ -1,0 +1,6 @@
+{
+  "name": "Hệ Thống Điều Hành & Tiếp Nhận Dịch Vụ Công Đa Kênh",
+  "description": "Dashboard quản trị và điều hành tiếp nhận dịch vụ công đa kênh hợp nhất dành cho cán bộ quản lý: tự động hóa trực ngoài giờ 24/7, AI giải quyết câu hỏi lặp lại và phát sóng thông báo hàng loạt.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

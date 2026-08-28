@@ -73,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({
           
           {/* Hotline 18XX XXXX / XXXX */}
           <div className="flex items-center gap-1.5 bg-red-950/60 px-2.5 py-0.5 rounded border border-red-800/60 text-amber-300 font-semibold text-[11px] truncate">
-            
+            <i className="fa-solid fa-headset text-amber-400"></i>
             <span className="truncate">
               Tổng đài: <strong className="text-white font-mono">18XX XXXX</strong> / <strong className="text-white font-mono">XXXX</strong>
             </span>
@@ -102,7 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
                     : 'text-red-300/60 hover:text-white'
                 }`}
               >
-                Sáng
+                <i className="fa-solid fa-sun text-[10px]"></i>
               </div>
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-200 ${
@@ -111,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
                     : 'text-red-300/60 hover:text-white'
                 }`}
               >
-                Tối
+                <i className="fa-solid fa-moon text-[10px]"></i>
               </div>
             </div>
 
@@ -136,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({
                     : 'text-red-300/60 hover:text-white'
                 }`}
               >
-                
+                <i className="fa-solid fa-user-shield text-[11px]"></i>
               </div>
 
               {/* Bot Icon */}
@@ -147,7 +147,7 @@ export const Header: React.FC<HeaderProps> = ({
                     : 'text-red-300/60 hover:text-white'
                 }`}
               >
-                
+                <i className="fa-solid fa-robot text-[11px]"></i>
               </div>
             </div>
 
@@ -159,7 +159,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="Xem thông báo & Cài đặt chuông"
               aria-label="Thông báo và cài đặt chuông"
             >
-              
+              <i className="fa-solid fa-bell text-xs"></i>
               {unreadNotificationCount > 0 && (
                 <span className="absolute -top-1 -right-1 px-1 min-w-[16px] h-4 bg-amber-400 text-slate-900 dark:text-slate-100 text-[9px] font-black rounded-full flex items-center justify-center shadow-xs animate-pulse border border-red-950">
                   {unreadNotificationCount}
@@ -180,7 +180,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
             {/* National Emblem Visual Crest */}
             <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-red-600 via-red-700 to-red-800 border-2 border-amber-400 flex items-center justify-center text-amber-300 shadow-md shrink-0">
-              
+              <i className="fa-solid fa-star text-amber-300 text-lg sm:text-xl drop-shadow-xs"></i>
               <div className="absolute inset-0 rounded-full border border-amber-300/40 pointer-events-none"></div>
             </div>
 
@@ -211,7 +211,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <span className="text-[10px] px-1.5 py-0.2 rounded font-bold bg-red-100 text-[#a81c1c] border border-red-200">
                       {ROLE_CONFIGS[currentUser.role]?.shortLabel || currentUser.role}
                     </span>
-                    
+                    <i className="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
                   </span>
                   <span className="text-[10px] text-emerald-700 font-bold flex items-center justify-end gap-1">
                     <span className={`w-1.5 h-1.5 rounded-full ${
@@ -298,7 +298,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className="w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer text-left font-bold text-slate-800 dark:text-slate-200"
                       >
-                        
+                        <i className="fa-solid fa-user-gear text-slate-500 dark:text-slate-400"></i>
                         <span>Hồ sơ cán bộ & Cài đặt</span>
                       </button>
                       <button
@@ -309,7 +309,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className="w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer text-left"
                       >
-                        
+                        <i className="fa-solid fa-inbox text-slate-500 dark:text-slate-400"></i>
                         <span>Hồ sơ đang phụ trách ({pendingCount})</span>
                       </button>
                       <button
@@ -320,7 +320,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className="w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer text-left"
                       >
-                        
+                        <i className="fa-solid fa-volume-high text-slate-500 dark:text-slate-400"></i>
                         <span>Cài đặt âm thanh & chuông báo</span>
                       </button>
                       <button
@@ -331,7 +331,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className="w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer text-left"
                       >
-                        
+                        <i className="fa-solid fa-network-wired text-slate-500 dark:text-slate-400"></i>
                         <span>Kết nối các kênh & Mạng xã hội</span>
                       </button>
                       <button
@@ -342,7 +342,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className="w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer text-left"
                       >
-                        
+                        <i className="fa-solid fa-chart-line text-slate-500 dark:text-slate-400"></i>
                         <span>Hiệu suất & Giám sát SLA ca trực</span>
                       </button>
                     </div>
@@ -356,7 +356,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className="w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer text-left"
                       >
-                        
+                        <i className="fa-solid fa-users text-slate-500 dark:text-slate-400"></i>
                         <span>Đổi tài khoản cán bộ khác</span>
                       </button>
                       <button
@@ -367,7 +367,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className="w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer text-left"
                       >
-                        
+                        <i className="fa-solid fa-user-plus text-slate-500 dark:text-slate-400"></i>
                         <span>Đăng ký thêm tài khoản mới</span>
                       </button>
                       <button
@@ -379,7 +379,7 @@ export const Header: React.FC<HeaderProps> = ({
                         className="w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 flex items-center justify-between transition-colors cursor-pointer text-left"
                       >
                         <span className="flex items-center gap-2.5">
-                          
+                          <i className="fa-solid fa-clock-rotate-left text-slate-500 dark:text-slate-400"></i>
                           <span>Chế độ trực</span>
                         </span>
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200">
@@ -397,7 +397,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className="w-full px-3 py-2 rounded-lg hover:bg-red-50 text-red-700 font-bold flex items-center gap-2.5 transition-colors cursor-pointer text-left"
                       >
-                        
+                        <i className="fa-solid fa-right-from-bracket text-red-600"></i>
                         <span>Bàn giao ca & Đăng xuất</span>
                       </button>
                     </div>
@@ -412,7 +412,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onOpenAuthModal('login')}
                 className="px-3 py-1.5 rounded-lg border border-[#a81c1c] text-[#a81c1c] hover:bg-red-50 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
               >
-                
+                <i className="fa-solid fa-right-to-bracket"></i>
                 <span>Đăng nhập</span>
               </button>
               <button
@@ -420,7 +420,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onOpenAuthModal('register')}
                 className="px-3 py-1.5 rounded-lg bg-[#a81c1c] hover:bg-red-800 text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
               >
-                
+                <i className="fa-solid fa-user-plus"></i>
                 <span className="hidden sm:inline">Đăng ký</span>
               </button>
             </div>
@@ -444,6 +444,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
               title="1. Hộp thư"
             >
+              <i className="fa-solid fa-inbox text-xs"></i>
               <span className="truncate">1. Hộp thư</span>
               {pendingCount > 0 && (
                 <span className="px-1.5 py-0.2 bg-amber-400 text-slate-900 dark:text-slate-100 text-[10px] font-black rounded-full shadow-xs shrink-0">
@@ -462,6 +463,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
               title="2. Nhật ký trực tự động"
             >
+              <i className="fa-solid fa-moon text-xs"></i>
               <span className="truncate">2. Nhật ký trực tự động</span>
             </button>
 
@@ -475,6 +477,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
               title="3. CSDL"
             >
+              <i className="fa-solid fa-book-bookmark text-xs"></i>
               <span className="truncate">3. CSDL</span>
             </button>
 
@@ -488,6 +491,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
               title="4. Thông báo"
             >
+              <i className="fa-solid fa-bullhorn text-xs"></i>
               <span className="truncate">4. Thông báo</span>
             </button>
 
@@ -501,6 +505,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
               title="5. Báo cáo"
             >
+              <i className="fa-solid fa-chart-pie text-xs"></i>
               <span className="truncate">5. Báo cáo</span>
             </button>
 

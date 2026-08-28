@@ -153,7 +153,7 @@ export const AIFloatingChatbot: React.FC = () => {
             title="Mở Trợ Lý Ảo GOVTECH (Phím tắt: ESC để đóng)"
           >
             <div className="relative w-8 h-8 rounded-full bg-red-800 flex items-center justify-center text-amber-300 border border-amber-300">
-              <i className="fa-solid fa-star text-base"></i>
+              
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full animate-pulse"></span>
             </div>
             <div className="text-left pr-1">
@@ -174,7 +174,7 @@ export const AIFloatingChatbot: React.FC = () => {
             <div className="bg-[#a81c1c] text-white p-3.5 flex items-center justify-between border-b border-red-900 shadow-md select-none shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-full bg-red-800 border-2 border-amber-400 flex items-center justify-center text-amber-300 shadow-xs">
-                  <i className="fa-solid fa-star text-base"></i>
+                  
                 </div>
                 <div>
                   <h3 className="font-extrabold text-xs sm:text-sm text-white flex items-center gap-1.5 leading-tight">
@@ -195,7 +195,7 @@ export const AIFloatingChatbot: React.FC = () => {
                   title="Làm mới hội thoại"
                   aria-label="Làm mới hội thoại"
                 >
-                  <i className="fa-solid fa-rotate-right"></i>
+                  
                 </button>
                 <button
                   type="button"
@@ -208,7 +208,7 @@ export const AIFloatingChatbot: React.FC = () => {
                   title="Đóng / Thu nhỏ cửa sổ (ESC)"
                   aria-label="Đóng Trợ lý AI"
                 >
-                  <i className="fa-solid fa-xmark"></i>
+                  
                 </button>
               </div>
             </div>
@@ -255,7 +255,7 @@ export const AIFloatingChatbot: React.FC = () => {
                       {msg.citations && msg.citations.length > 0 && (
                         <div className="mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-500 space-y-1">
                           <span className="font-bold text-[#a81c1c] flex items-center gap-1">
-                            <i className="fa-solid fa-gavel text-[9px]"></i>
+                            
                             Nguồn & Căn cứ pháp lý:
                           </span>
                           <div className="flex flex-wrap gap-1">
@@ -274,7 +274,7 @@ export const AIFloatingChatbot: React.FC = () => {
 
               {isTyping && (
                 <div className="flex items-center gap-2 text-slate-500 text-xs p-2 bg-white rounded-xl border border-slate-200 w-fit">
-                  <i className="fa-solid fa-spinner fa-spin text-[#a81c1c]"></i>
+                  
                   <span className="font-medium text-[11px]">AI đang tra cứu văn bản pháp luật...</span>
                 </div>
               )}
@@ -303,7 +303,7 @@ export const AIFloatingChatbot: React.FC = () => {
                 className="px-3.5 py-2 bg-[#a81c1c] hover:bg-[#8b0000] disabled:opacity-50 text-white rounded-lg font-bold text-xs shadow-xs transition-colors flex items-center gap-1 cursor-pointer"
               >
                 <span>Gửi</span>
-                <i className="fa-solid fa-paper-plane text-[10px]"></i>
+                
               </button>
             </form>
 
@@ -315,7 +315,7 @@ export const AIFloatingChatbot: React.FC = () => {
                 onClick={() => setIsOpen(false)}
                 className="text-[#a81c1c] hover:underline font-bold flex items-center gap-1 cursor-pointer"
               >
-                <i className="fa-solid fa-xmark text-[9px]"></i>
+                
                 <span>Thu nhỏ</span>
               </button>
             </div>

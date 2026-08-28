@@ -80,7 +80,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-              <i className="fa-solid fa-chart-line text-[#a81c1c]"></i>
+              
               Báo Cáo Hiệu Suất Tiếp Nhận & Giám Sát SLA Đa Kênh
             </h2>
             <span className="text-[10px] bg-red-100 text-[#a81c1c] px-2.5 py-0.5 rounded font-extrabold border border-red-200 uppercase">
@@ -111,12 +111,12 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
         >
           <div className="flex items-center justify-between text-slate-500 text-xs">
             <span className="font-bold uppercase text-[10px] text-blue-700">1. Hợp nhất Đa Kênh</span>
-            <i className="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+            
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black text-slate-900">{totalTickets}</span>
             <span className="text-[11px] text-emerald-700 font-bold flex items-center gap-0.5">
-              <i className="fa-solid fa-check-circle"></i> {pendingTickets.length} chờ tiếp nhận
+               {pendingTickets.length} chờ tiếp nhận
             </span>
           </div>
           <p className="text-[11px] text-slate-600 leading-tight">
@@ -135,12 +135,12 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
         >
           <div className="flex items-center justify-between text-slate-500 text-xs">
             <span className="font-bold uppercase text-[10px] text-purple-800">2. Trực Tự Động Ngoài Giờ</span>
-            <i className="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-purple-600 transition-colors"></i>
+            
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black text-purple-900">{nightShiftLogs.length}</span>
             <span className="text-[11px] text-emerald-700 font-bold flex items-center gap-0.5">
-              <i className="fa-solid fa-bolt"></i> Phản hồi 0.2s
+               Phản hồi 0.2s
             </span>
           </div>
           <p className="text-[11px] text-slate-600 leading-tight">
@@ -159,12 +159,12 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
         >
           <div className="flex items-center justify-between text-slate-500 text-xs">
             <span className="font-bold uppercase text-[10px] text-emerald-800">3. CSDL Thủ Tục & AI</span>
-            <i className="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-emerald-600 transition-colors"></i>
+            
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black text-emerald-900">{faqAutoRate}%</span>
             <span className="text-[11px] text-emerald-700 font-bold flex items-center gap-0.5">
-              <i className="fa-solid fa-brain"></i> {faqs.length} thủ tục
+               {faqs.length} thủ tục
             </span>
           </div>
           <p className="text-[11px] text-slate-600 leading-tight">
@@ -183,12 +183,12 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
         >
           <div className="flex items-center justify-between text-slate-500 text-xs">
             <span className="font-bold uppercase text-[10px] text-amber-800">4. Phát Sóng Hàng Loạt</span>
-            <i className="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-amber-600 transition-colors"></i>
+            
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black text-amber-900">{avgReadRate}%</span>
             <span className="text-[11px] text-emerald-700 font-bold flex items-center gap-0.5">
-              <i className="fa-solid fa-bullhorn"></i> {broadcasts.length} chiến dịch
+               {broadcasts.length} chiến dịch
             </span>
           </div>
           <p className="text-[11px] text-slate-600 leading-tight">
@@ -208,7 +208,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
         <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <i className="fa-solid fa-chart-pie text-[#a81c1c]"></i>
+              
               Phân Bổ Lượng Tin Nhắn Tiếp Nhận Theo Kênh
             </h3>
             <span className="text-[11px] text-slate-500 font-medium">Bấm vào kênh để lọc hộp thư</span>
@@ -222,7 +222,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
             >
               <div className="flex justify-between font-bold text-slate-700 mb-1">
                 <span className="flex items-center gap-1.5 text-blue-800">
-                  <i className="fa-solid fa-comment-dots"></i> Zalo Official Account ({zaloPct}%)
+                   Zalo Official Account ({zaloPct}%)
                 </span>
                 <span>{zaloCount} hồ sơ</span>
               </div>
@@ -238,7 +238,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
             >
               <div className="flex justify-between font-bold text-slate-700 mb-1">
                 <span className="flex items-center gap-1.5 text-red-800">
-                  <i className="fa-solid fa-landmark"></i> Cổng Dịch Vụ Công Quốc Gia ({dvcPct}%)
+                   Cổng Dịch Vụ Công Quốc Gia ({dvcPct}%)
                 </span>
                 <span>{dvcCount} hồ sơ</span>
               </div>
@@ -254,7 +254,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
             >
               <div className="flex justify-between font-bold text-slate-700 mb-1">
                 <span className="flex items-center gap-1.5 text-indigo-800">
-                  <i className="fa-brands fa-facebook"></i> Facebook Fanpage UBND ({fbPct}%)
+                   Facebook Fanpage UBND ({fbPct}%)
                 </span>
                 <span>{fbCount} hồ sơ</span>
               </div>
@@ -270,7 +270,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
             >
               <div className="flex justify-between font-bold text-slate-700 mb-1">
                 <span className="flex items-center gap-1.5 text-emerald-800">
-                  <i className="fa-solid fa-phone"></i> Tổng Đài 1022 & Hotline ({hotlinePct}%)
+                   Tổng Đài 1022 & Hotline ({hotlinePct}%)
                 </span>
                 <span>{hotlineCount} cuộc</span>
               </div>
@@ -286,7 +286,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
             >
               <div className="flex justify-between font-bold text-slate-700 mb-1">
                 <span className="flex items-center gap-1.5 text-amber-800">
-                  <i className="fa-solid fa-envelope"></i> Email & Cổng Web ({emailPct}%)
+                   Email & Cổng Web ({emailPct}%)
                 </span>
                 <span>{emailCount} thư</span>
               </div>
@@ -301,7 +301,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
         <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <i className="fa-solid fa-clock-rotate-left text-emerald-700"></i>
+              
               Tỷ Lệ Đúng Hạn SLA Theo Lĩnh Vực TTHC (Quy định &lt; 15 phút)
             </h3>
             <span className="text-[11px] text-slate-500 font-medium">Bấm để lọc theo lĩnh vực</span>

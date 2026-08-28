@@ -1,4 +1,4 @@
-import { TicketItem, AfterHoursRule, NightShiftLog, FAQItem, CannedSnippet, BroadcastCampaign, BroadcastReply, AppNotification, UserProfile } from '../types';
+﻿import { TicketItem, AfterHoursRule, NightShiftLog, FAQItem, CannedSnippet, BroadcastCampaign, BroadcastReply, AppNotification, UserProfile } from '../types';
 
 export const INITIAL_USERS: UserProfile[] = [
   {
@@ -620,5 +620,3 @@ export const INITIAL_NOTIFICATIONS: AppNotification[] = [
     targetTab: 'broadcast'
   }
 ];
-
-

@@ -70,7 +70,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
       <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center gap-3.5">
           <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700 text-2xl shrink-0 shadow-inner">
-            <i className="fa-solid fa-moon"></i>
+            
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
               className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
               title="Xem CSDL Thủ tục mà AI sử dụng để trả lời"
             >
-              <i className="fa-solid fa-brain text-purple-700 text-xs"></i>
+              
               <span>Xem CSDL Tri Thức AI</span>
             </button>
           )}
@@ -117,7 +117,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
                   : 'text-slate-400 hover:text-slate-700'
               }`}
             >
-              <i className="fa-solid fa-user"></i>
+              
             </div>
 
             <div
@@ -127,7 +127,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
                   : 'text-slate-400 hover:text-slate-700'
               }`}
             >
-              <i className="fa-solid fa-robot"></i>
+              
             </div>
           </div>
         </div>
@@ -142,7 +142,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
           <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <i className="fa-solid fa-sliders text-[#a81c1c] text-sm"></i>
+                
                 <h3 className="font-bold text-sm text-slate-900">Kịch Bản Tự Động Phản Hồi Khi Ngoài Giờ Tiếp Nhận</h3>
               </div>
               <span className="text-xs text-slate-500 font-semibold">{rules.filter(r => r.isActive).length}/{rules.length} Kịch bản kích hoạt</span>
@@ -184,7 +184,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
 
                   <div className="mt-2 pt-2 border-t border-slate-200/60 flex flex-wrap items-center justify-between text-[10px] text-slate-500 gap-2">
                     <div className="flex items-center gap-1.5">
-                      <i className="fa-solid fa-calendar-check text-purple-700"></i>
+                      
                       <span>Lên lịch gọi lại: <strong>{rule.createCallbackTicket ? 'Có (Tự động)' : 'Không'}</strong></span>
                     </div>
                     <div className="flex items-center gap-1">
@@ -205,7 +205,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
           
           <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-3">
             <div className="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-              <i className="fa-solid fa-flask-vial text-purple-700 text-sm"></i>
+              
               <h3 className="font-bold text-sm text-slate-900">Mô Phỏng Tiếp Nhận Tức Thì 24/7</h3>
             </div>
 
@@ -278,12 +278,12 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
               >
                 {isSimulating ? (
                   <>
-                    <i className="fa-solid fa-spinner fa-spin text-xs"></i>
+                    
                     <span>AI đang phân tích & lên lịch hẹn...</span>
                   </>
                 ) : (
                   <>
-                    <i className="fa-solid fa-robot text-xs"></i>
+                    
                     <span>Chạy Thử Nghiệm Tiếp Nhận & Tạo Hồ Sơ</span>
                   </>
                 )}
@@ -295,7 +295,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
               <div className="mt-3 p-3 bg-purple-50 border border-purple-200 rounded-xl space-y-2.5 text-xs animate-fadeIn">
                 <div className="flex items-center justify-between text-purple-900 font-bold text-[11px]">
                   <span className="flex items-center gap-1.5 text-emerald-800">
-                    <i className="fa-solid fa-circle-check text-emerald-600"></i>
+                    
                     Đã lưu vào Hộp Thư (0.2s)
                   </span>
                   <span className="font-mono bg-white px-2 py-0.5 rounded border border-purple-200 text-purple-900 font-bold">
@@ -315,7 +315,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
                     onClick={() => onOpenTicketInInbox(simResult.ticketCode)}
                     className="w-full py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs"
                   >
-                    <i className="fa-solid fa-inbox text-xs"></i>
+                    
                     <span>Xem Hồ Sơ Này Trong Hộp Thư Tiếp Nhận</span>
                   </button>
                 )}
@@ -332,7 +332,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
         <div className="p-3.5 border-b border-slate-200 bg-[#f8fafc] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <i className="fa-solid fa-clipboard-list text-purple-700 text-sm"></i>
+            
             <h3 className="font-bold text-sm text-slate-900">Nhật Ký Tiếp Nhận Ban Đêm & Lịch Hẹn Liên Hệ Lại</h3>
           </div>
           <span className="text-xs text-slate-500 font-semibold">{nightShiftLogs.length} yêu cầu được AI tự động tiếp nhận đêm qua</span>
@@ -379,7 +379,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
                       <p className="text-slate-800 line-clamp-2">{log.questionSnippet}</p>
                     </td>
                     <td className="py-3 px-4 font-semibold text-emerald-700 whitespace-nowrap">
-                      <i className="fa-regular fa-clock mr-1 text-[10px]"></i>
+                      
                       {log.callbackTimeTarget}
                     </td>
                     <td className="py-3 px-4 whitespace-nowrap">
@@ -390,7 +390,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
                         </span>
                       ) : (
                         <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded text-[10px] font-bold inline-flex items-center gap-1">
-                          <i className="fa-solid fa-check text-[9px]"></i>
+                          
                           Đã liên hệ hỗ trợ
                         </span>
                       )}
@@ -403,7 +403,7 @@ Hệ thống đã tự động lưu thông tin và tạo lịch hẹn cho Cán b
                             className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded text-[11px] font-bold transition-colors cursor-pointer"
                             title="Xem hồ sơ trong Hộp Thư"
                           >
-                            <i className="fa-solid fa-inbox text-blue-700 mr-1"></i>
+                            
                             Hộp Thư
                           </button>
                         )}

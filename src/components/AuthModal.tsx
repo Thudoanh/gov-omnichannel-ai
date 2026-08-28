@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { UserProfile, UserRole } from '../types';
-import { INITIAL_USERS } from '../data/mockData';
 import { ROLE_CONFIGS } from '../utils/rbac';
 
 export interface AuthModalProps {
@@ -10,7 +9,7 @@ export interface AuthModalProps {
   onLogin: (user: UserProfile) => void;
   onRegister: (newUser: UserProfile) => void;
   onUpdateProfile: (updatedUser: UserProfile) => void;
-  initialView?: 'login' | 'register' | 'forgot' | 'profile';
+  initialView?: 'login' | 'register' | 'forgot' | 'profile' | 'channels';
   registeredUsers?: UserProfile[];
 }
 
@@ -22,9 +21,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onRegister,
   onUpdateProfile,
   initialView = 'login',
-  registeredUsers = INITIAL_USERS
+  registeredUsers = []
 }) => {
-  const [view, setView] = useState<'login' | 'register' | 'forgot' | 'profile'>(initialView);
+  const [view, setView] = useState<'login' | 'register' | 'forgot' | 'profile' | 'channels'>(initialView);
   const [loginMethod, setLoginMethod] = useState<'credentials' | 'vneid'>('credentials');
   
   // Login Form state
@@ -72,6 +71,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [profileTitle, setProfileTitle] = useState(currentUser?.title || '');
   const [profileStatus, setProfileStatus] = useState<'available' | 'busy' | 'away'>(currentUser?.status || 'available');
   const [profileMessage, setProfileMessage] = useState('');
+
+  // Channels state
+  const [zaloConnected, setZaloConnected] = useState(false);
+  const [fbConnected, setFbConnected] = useState(false);
+  const [dvcConnected, setDvcConnected] = useState(true);
 
   // Synchronize view with initialView prop when modal opens
   React.useEffect(() => {
@@ -451,7 +455,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="bg-gradient-to-r from-[#8b0000] via-[#a81c1c] to-[#7a1212] px-5 py-3.5 text-white flex items-center justify-between shadow-sm shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-red-800 border border-amber-300 flex items-center justify-center text-amber-300 shrink-0 shadow-inner">
-              <i className="fa-solid fa-shield-halved text-sm"></i>
+              
             </div>
             <div>
               <h2 className="font-extrabold text-sm sm:text-base leading-tight flex items-center gap-2">
@@ -468,7 +472,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer text-sm"
             title="Đóng cửa sổ"
           >
-            <i className="fa-solid fa-xmark"></i>
+            
           </button>
         </div>
 
@@ -1227,6 +1231,94 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </button>
               </div>
             </form>
+          )}
+
+          {/* ----- CHANNELS VIEW ----- */}
+          {view === 'channels' && (
+            <div className="p-4 sm:p-5 flex-1 overflow-y-auto space-y-4 bg-slate-50">
+              <div className="text-center mb-4">
+                <h2 className="text-lg font-black text-slate-800">Quản lý Kênh Liên Lạc</h2>
+                <p className="text-xs text-slate-500 mt-1">Kết nối các mạng xã hội và kênh tiếp nhận để quản lý đồng bộ</p>
+              </div>
+
+              <div className="space-y-3">
+                {/* DVC */}
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600">
+                      
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800">Cổng Dịch Vụ Công</h4>
+                      <p className="text-[10px] text-slate-500">Mặc định của hệ thống</p>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center gap-1.5">
+                       Đã kết nối
+                    </span>
+                  </div>
+                </div>
+
+                {/* Zalo OA */}
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                      
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800">Zalo Official Account</h4>
+                      <p className="text-[10px] text-slate-500">Tiếp nhận chat từ người dân qua Zalo</p>
+                    </div>
+                  </div>
+                  <div>
+                    {zaloConnected ? (
+                      <button onClick={() => setZaloConnected(false)} className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors">
+                        Ngắt kết nối
+                      </button>
+                    ) : (
+                      <button onClick={() => setZaloConnected(true)} className="px-3 py-1.5 text-[11px] font-bold rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-colors flex items-center gap-1.5">
+                         Kết nối
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Facebook Fanpage */}
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                      
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800">Facebook Fanpage</h4>
+                      <p className="text-[10px] text-slate-500">Tiếp nhận tin nhắn Messenger</p>
+                    </div>
+                  </div>
+                  <div>
+                    {fbConnected ? (
+                      <button onClick={() => setFbConnected(false)} className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors">
+                        Ngắt kết nối
+                      </button>
+                    ) : (
+                      <button onClick={() => setFbConnected(true)} className="px-3 py-1.5 text-[11px] font-bold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm transition-colors flex items-center gap-1.5">
+                         Kết nối
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer"
+                >
+                  Đóng
+                </button>
+              </div>
+            </div>
           )}
 
         </div>

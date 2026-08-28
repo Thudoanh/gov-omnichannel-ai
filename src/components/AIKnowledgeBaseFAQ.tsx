@@ -122,7 +122,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
       <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center gap-3.5">
           <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 text-2xl shrink-0 shadow-inner">
-            <i className="fa-solid fa-brain"></i>
+            
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -141,7 +141,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
           onClick={() => setShowAddModal(true)}
           className="px-4 py-2.5 bg-[#a81c1c] hover:bg-[#8b0000] text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5"
         >
-          <i className="fa-solid fa-plus text-xs"></i>
+          
           <span>Thêm Thủ Tục & Mẫu Mới</span>
         </button>
       </div>
@@ -156,7 +156,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
               : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'
           }`}
         >
-          <i className="fa-solid fa-book-bookmark text-xs"></i>
+          
           <span>Kho 100+ Thủ Tục TTHC ({faqs.length})</span>
         </button>
         <button
@@ -167,7 +167,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
               : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'
           }`}
         >
-          <i className="fa-solid fa-bolt text-xs"></i>
+          
           <span>Mẫu Phản Hồi Nhanh ({cannedSnippets.length})</span>
         </button>
         <button
@@ -178,7 +178,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
               : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'
           }`}
         >
-          <i className="fa-solid fa-microchip text-xs"></i>
+          
           <span>Trình Kiểm Tra & Khớp Ý Định AI</span>
         </button>
       </div>
@@ -190,7 +190,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
           {/* Filter Bar */}
           <div className="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-xs">
             <div className="relative flex-1 min-w-[240px]">
-              <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              
               <input
                 type="text"
                 value={searchQuery}
@@ -238,7 +238,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
                           : 'bg-slate-100 text-slate-500 border-slate-300'
                       }`}
                     >
-                      <i className="fa-solid fa-robot text-[9px]"></i>
+                      
                       <span>{faq.autoResolutionEnabled ? 'AI Tự động BẬT' : 'AI Tự động TẮT'}</span>
                     </button>
                   </div>
@@ -254,7 +254,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
 
                 <div className="space-y-2 pt-2 border-t border-slate-100 text-xs">
                   <div className="flex items-center gap-1.5 text-[11px] text-[#a81c1c] font-semibold">
-                    <i className="fa-solid fa-gavel text-xs"></i>
+                    
                     <span>{faq.legalBasis}</span>
                   </div>
 
@@ -280,7 +280,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
                         className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1 cursor-pointer"
                         title="Tạo bản tin phát sóng thông báo cho thủ tục này"
                       >
-                        <i className="fa-solid fa-bullhorn text-amber-700 text-[10px]"></i>
+                        
                         <span>Phát sóng</span>
                       </button>
                     )}
@@ -290,7 +290,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
                         className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-300 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1 cursor-pointer"
                         title="Chuyển đến Hộp Thư và áp dụng nội dung trả lời này"
                       >
-                        <i className="fa-solid fa-inbox text-blue-700 text-[10px]"></i>
+                        
                         <span>Dùng Cho Hộp Thư</span>
                       </button>
                     )}
@@ -338,7 +338,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
         <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
           <div>
             <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <i className="fa-solid fa-microchip text-emerald-700"></i>
+              
               <span>Trình Thử Nghiệm Tự Động Trích Xuất & Khớp Ý Định AI</span>
             </h3>
             <p className="text-xs text-slate-600 mt-1">
@@ -358,7 +358,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
               type="submit"
               className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg shadow-xs transition-colors flex items-center gap-2"
             >
-              <i className="fa-solid fa-play text-xs"></i>
+              
               <span>Kiểm Tra Độ Khớp AI</span>
             </button>
           </form>
@@ -367,7 +367,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
             <div className="p-4 bg-emerald-50/50 border border-emerald-200 rounded-xl space-y-3 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-emerald-900 text-sm flex items-center gap-1.5">
-                  <i className="fa-solid fa-circle-check text-emerald-600"></i>
+                  
                   Kết quả phân tích: Khớp {testResult.confidence}%
                 </span>
                 <span className={`px-2.5 py-0.5 rounded text-[11px] font-bold ${
@@ -400,7 +400,7 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
                         onClick={() => onTestWithRealTicket(testResult.matchedFAQ!, testInput)}
                         className="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
                       >
-                        <i className="fa-solid fa-inbox text-xs"></i>
+                        
                         <span>Tạo Hồ Sơ Thử Nghiệm Gửi Vào Hộp Thư Tiếp Nhận</span>
                       </button>
                     </div>
@@ -418,14 +418,14 @@ export const AIKnowledgeBaseFAQ: React.FC<AIKnowledgeBaseFAQProps> = ({
           <div className="bg-white border border-slate-200 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                <i className="fa-solid fa-plus-circle text-[#a81c1c]"></i>
+                
                 Thêm Thủ Tục & Câu Trả Lời Chuẩn Mới
               </h3>
               <button
                 onClick={() => setShowAddModal(false)}
                 className="text-slate-400 hover:text-slate-700 text-base"
               >
-                <i className="fa-solid fa-xmark"></i>
+                
               </button>
             </div>
 

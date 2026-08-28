@@ -137,7 +137,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
         <div className="bg-[#8b0000] text-white p-3 sm:p-3.5 flex items-center justify-between border-b border-red-950 select-none shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-red-950/60 border border-red-700 flex items-center justify-center text-amber-300">
-              <i className={activeTab === 'notifications' ? 'fa-solid fa-bell text-sm' : 'fa-solid fa-sliders text-sm'}></i>
+              
             </div>
             <div>
               <h3 className="font-extrabold text-sm text-white flex items-center gap-2">
@@ -161,7 +161,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
               title="Đóng (ESC)"
               aria-label="Đóng cửa sổ"
             >
-              <i className="fa-solid fa-xmark"></i>
+              
             </button>
           </div>
         </div>
@@ -176,7 +176,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <i className="fa-solid fa-bell text-xs"></i>
+            
             <span>Xem thông báo</span>
             {unreadCount > 0 && (
               <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
@@ -191,7 +191,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <i className="fa-solid fa-volume-high text-xs"></i>
+            
             <span>Cài đặt tiếng chuông</span>
           </button>
         </div>
@@ -251,7 +251,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
                   className="text-slate-400 hover:text-slate-700 cursor-pointer"
                   title="Xóa danh sách thông báo"
                 >
-                  <i className="fa-regular fa-trash-can"></i>
+                  
                 </button>
               </div>
             </div>
@@ -260,7 +260,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
             <div className="flex-1 overflow-y-auto p-3 space-y-2.5 custom-scrollbar bg-slate-50/40">
               {filteredNotifications.length === 0 ? (
                 <div className="py-12 text-center text-slate-400 space-y-2">
-                  <i className="fa-regular fa-bell-slash text-3xl text-slate-300"></i>
+                  
                   <p className="text-xs font-semibold">Không có thông báo nào trong danh mục này</p>
                 </div>
               ) : (
@@ -310,7 +310,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
                     >
                       <div className="flex items-start gap-2.5">
                         <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs shrink-0 border ${style.bg}`}>
-                          <i className={style.icon}></i>
+                          
                         </div>
 
                         <div className="flex-1 min-w-0 space-y-0.5">
@@ -332,7 +332,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
                               </span>
                               <span className="text-[#a81c1c] font-bold flex items-center gap-1 hover:underline">
                                 <span>Xem chi tiết</span>
-                                <i className="fa-solid fa-arrow-right text-[8px]"></i>
+                                
                               </span>
                             </div>
                           )}
@@ -363,7 +363,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base ${
                   soundSettings.isEnabled ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-500'
                 }`}>
-                  <i className={`fa-solid ${soundSettings.isEnabled ? 'fa-bell' : 'fa-bell-slash'}`}></i>
+                  
                 </div>
                 <div>
                   <h4 className="font-bold text-slate-900 text-xs">Âm thanh chuông báo</h4>
@@ -387,7 +387,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
             <div className="bg-white border border-slate-200 rounded-xl p-3.5 space-y-2 shadow-2xs">
               <div className="flex items-center justify-between text-xs font-bold text-slate-800">
                 <span className="flex items-center gap-1.5">
-                  <i className="fa-solid fa-volume-high text-[#a81c1c]"></i>
+                  
                   <span>Âm lượng chuông</span>
                 </span>
                 <span className="text-[#a81c1c] font-mono text-xs">{soundSettings.volume}%</span>
@@ -415,7 +415,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                  <i className="fa-solid fa-music text-purple-700"></i>
+                  
                   <span>Lựa chọn kiểu chuông thông báo</span>
                 </label>
                 <span className="text-[10px] text-slate-500">Bấm loa để nghe thử</span>
@@ -440,7 +440,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm ${
                           isSelected ? 'bg-amber-400 text-slate-900 font-bold' : 'bg-slate-100 text-slate-600'
                         }`}>
-                          <i className={`fa-solid ${preset.icon}`}></i>
+                          
                         </div>
 
                         <div>
@@ -468,7 +468,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
                         }`}
                         title="Nghe thử âm thanh này"
                       >
-                        <i className={`fa-solid ${isTesting ? 'fa-spinner fa-spin' : 'fa-play'}`}></i>
+                        
                       </button>
                     </div>
                   );
@@ -519,7 +519,7 @@ export const NotificationSoundModal: React.FC<NotificationSoundModalProps> = ({
         {/* Footer */}
         <div className="p-2.5 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500 shrink-0">
           <span className="flex items-center gap-1">
-            <i className="fa-solid fa-circle-check text-emerald-600"></i>
+            
             Tự động lưu cài đặt
           </span>
           <button

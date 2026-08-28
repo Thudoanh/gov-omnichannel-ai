@@ -97,7 +97,7 @@ export const MassBroadcastCenter: React.FC<MassBroadcastCenterProps> = ({
       <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center gap-3.5">
           <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 text-2xl shrink-0 shadow-inner">
-            <i className="fa-solid fa-bullhorn"></i>
+            
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -116,7 +116,7 @@ export const MassBroadcastCenter: React.FC<MassBroadcastCenterProps> = ({
           onClick={() => setShowCreateModal(true)}
           className="px-4 py-2.5 bg-[#a81c1c] hover:bg-[#8b0000] text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5"
         >
-          <i className="fa-solid fa-paper-plane text-xs"></i>
+          
           <span>Tạo Bản Tin Phát Sóng Mới</span>
         </button>
       </div>
@@ -131,7 +131,7 @@ export const MassBroadcastCenter: React.FC<MassBroadcastCenterProps> = ({
               : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'
           }`}
         >
-          <i className="fa-solid fa-tower-broadcast text-xs"></i>
+          
           <span>Chiến Dịch Đã Phát Sóng ({campaigns.length})</span>
         </button>
         <button
@@ -142,7 +142,7 @@ export const MassBroadcastCenter: React.FC<MassBroadcastCenterProps> = ({
               : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'
           }`}
         >
-          <i className="fa-solid fa-reply-all text-xs"></i>
+          
           <span>Phản Hồi Trực Tiếp Của Người Dân ({replies.length})</span>
         </button>
       </div>
@@ -272,7 +272,7 @@ export const MassBroadcastCenter: React.FC<MassBroadcastCenterProps> = ({
                             onClick={() => onRouteReplyToInbox(reply.id)}
                             className="px-3 py-1.5 bg-[#a81c1c] hover:bg-[#8b0000] text-white rounded-lg text-[11px] font-bold shadow-xs transition-colors flex items-center gap-1 cursor-pointer"
                           >
-                            <i className="fa-solid fa-inbox text-[10px]"></i>
+                            
                             <span>Chuyển Thành Hồ Sơ Hộp Thư</span>
                           </button>
                         ) : (
@@ -281,7 +281,7 @@ export const MassBroadcastCenter: React.FC<MassBroadcastCenterProps> = ({
                               onClick={() => onOpenTicketInInbox(reply.phone)}
                               className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-blue-800 rounded-lg text-[11px] font-bold transition-colors flex items-center gap-1 cursor-pointer"
                             >
-                              <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                              
                               <span>Mở trong Hộp Thư</span>
                             </button>
                           )
@@ -302,14 +302,14 @@ export const MassBroadcastCenter: React.FC<MassBroadcastCenterProps> = ({
           <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                <i className="fa-solid fa-bullhorn text-[#a81c1c]"></i>
+                
                 Tạo Bản Tin Phát Sóng Đa Kênh Mới
               </h3>
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="text-slate-400 hover:text-slate-700 text-base"
               >
-                <i className="fa-solid fa-xmark"></i>
+                
               </button>
             </div>
 

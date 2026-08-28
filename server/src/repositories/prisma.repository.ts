@@ -93,10 +93,10 @@ export class TicketRepository implements Repository<TicketItem> {
     return (await prisma.ticket.findMany({ where, include: ticketInclude, orderBy: { createdAt: 'desc' } })).map(toTicket);
   }
   async findById(id: string) { const item = await prisma.ticket.findUnique({ where: { id }, include: ticketInclude }); return item ? toTicket(item) : undefined; }
-  async create(item: TicketItem) { return prisma.$transaction((tx) => createTicketWithClient(tx, item)); }
+  async create(item: TicketItem) { return prisma.$transaction((tx: Prisma.TransactionClient) => createTicketWithClient(tx, item)); }
   async update(id: string, changes: Partial<TicketItem>) {
     if (!await this.findById(id)) throw missing('Ticket', id);
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       let assignedUserId: string | undefined;
       if (changes.assignedOfficer) assignedUserId = await assigneeId(tx, changes.assignedOfficer);
       if (changes.conversation) {
@@ -120,7 +120,7 @@ export class TicketRepository implements Repository<TicketItem> {
   }
   async addMessage(id: string, message: MessageItem, assignedOfficer: string) {
     if (!await this.findById(id)) throw missing('Ticket', id);
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const assignedUserId = await assigneeId(tx, assignedOfficer);
       await tx.message.create({ data: { ticketId: id, ...messageData(message) } });
       return toTicket(await tx.ticket.update({ where: { id }, data: { lastMessage: message.text, assignedOfficer, assigneeId: assignedUserId ?? null, status: 'processing', updatedAtLabel: message.time }, include: ticketInclude }));
@@ -128,7 +128,7 @@ export class TicketRepository implements Repository<TicketItem> {
   }
   async addNote(id: string, content: string, authorId?: string) {
     if (!await this.findById(id)) throw missing('Ticket', id);
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await tx.internalNote.create({ data: { ticketId: id, authorId, content } });
       return toTicket(await tx.ticket.update({ where: { id }, data: { updatedAtLabel: new Date().toLocaleString('vi-VN') }, include: ticketInclude }));
     });
@@ -165,7 +165,7 @@ export class LogRepository implements Repository<NightShiftLog> {
   async findCallbacks() { return (await prisma.afterHoursLog.findMany({ where: { actionTaken: 'scheduled_morning_callback' }, orderBy: { receivedAt: 'desc' } })).map(toLog); }
   async findById(id: string) { const item = await prisma.afterHoursLog.findUnique({ where: { id } }); return item ? toLog(item) : undefined; }
   async create(i: NightShiftLog) { return toLog(await prisma.afterHoursLog.create({ data: { id: i.id, citizenName: i.citizenName, phone: i.phone, channel: i.channel, receivedAtLabel: i.receivedAt, questionSnippet: i.questionSnippet, actionTaken: i.actionTaken, ticketCode: i.ticketCode, callbackAssignedTo: i.callbackAssignedTo, callbackTimeTarget: i.callbackTimeTarget, status: i.status, scheduledCallback: i.actionTaken === 'scheduled_morning_callback' ? { create: { assignedTo: i.callbackAssignedTo, targetLabel: i.callbackTimeTarget, status: i.status } } : undefined } })); }
-  async update(id: string, c: Partial<NightShiftLog>) { if (!await this.findById(id)) throw missing('After-hours log', id); return prisma.$transaction(async (tx) => { if (c.status) await tx.scheduledCallback.updateMany({ where: { afterHoursLogId: id }, data: { status: c.status } }); return toLog(await tx.afterHoursLog.update({ where: { id }, data: { citizenName: c.citizenName, phone: c.phone, channel: c.channel, receivedAtLabel: c.receivedAt, questionSnippet: c.questionSnippet, actionTaken: c.actionTaken, ticketCode: c.ticketCode, callbackAssignedTo: c.callbackAssignedTo, callbackTimeTarget: c.callbackTimeTarget, status: c.status } })); }); }
+  async update(id: string, c: Partial<NightShiftLog>) { if (!await this.findById(id)) throw missing('After-hours log', id); return prisma.$transaction(async (tx: Prisma.TransactionClient) => { if (c.status) await tx.scheduledCallback.updateMany({ where: { afterHoursLogId: id }, data: { status: c.status } }); return toLog(await tx.afterHoursLog.update({ where: { id }, data: { citizenName: c.citizenName, phone: c.phone, channel: c.channel, receivedAtLabel: c.receivedAt, questionSnippet: c.questionSnippet, actionTaken: c.actionTaken, ticketCode: c.ticketCode, callbackAssignedTo: c.callbackAssignedTo, callbackTimeTarget: c.callbackTimeTarget, status: c.status } })); }); }
   async delete(id: string) { const item = await this.findById(id); if (!item) throw missing('After-hours log', id); await prisma.afterHoursLog.delete({ where: { id } }); return item; }
 }
 

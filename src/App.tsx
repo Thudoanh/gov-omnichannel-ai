@@ -21,7 +21,6 @@ import {
   INITIAL_CANNED_SNIPPETS,
   INITIAL_BROADCASTS,
   INITIAL_BROADCAST_REPLIES,
-  INITIAL_NOTIFICATIONS,
   INITIAL_USERS
 } from './data/mockData';
 import { Header } from './components/Header';
@@ -44,18 +43,70 @@ import { afterHoursApi } from './services/afterHoursApi';
 import { broadcastApi } from './services/broadcastApi';
 import { analyticsApi } from './services/analyticsApi';
 
+const INITIAL_NOTIFICATIONS: AppNotification[] = [
+  {
+    id: 'notif-1',
+    title: 'Hồ sơ khẩn cấp mới từ Zalo OA',
+    message: 'Công dân Hoàng Minh Quân yêu cầu trích lục bản đồ địa chính gấp trong sáng nay.',
+    time: '5 phút trước',
+    type: 'urgent',
+    isRead: false,
+    targetTab: 'inbox',
+    ticketId: 'REQ-2026-8821'
+  },
+  {
+    id: 'notif-2',
+    title: 'AI tự động hoàn tất tư vấn TTHC',
+    message: 'Trợ lý AI vừa tự động tra cứu và phản hồi quy trình Cấp đổi GPLX trên Cổng DVC (Độ chính xác 98%).',
+    time: '12 phút trước',
+    type: 'bot',
+    isRead: false,
+    targetTab: 'inbox',
+    ticketId: 'REQ-2026-8815'
+  },
+  {
+    id: 'notif-3',
+    title: 'Cảnh báo hạn xử lý SLA (Dưới 30 phút)',
+    message: 'Hồ sơ #REQ-2026-8819 Đăng ký kinh doanh sắp tới hạn phản hồi theo quy định.',
+    time: '25 phút trước',
+    type: 'sla',
+    isRead: false,
+    targetTab: 'inbox',
+    ticketId: 'REQ-2026-8819'
+  },
+  {
+    id: 'notif-4',
+    title: 'Báo cáo Ca trực Đêm hoàn tất',
+    message: 'Đã tự động tiếp nhận 18 phản ánh ngoài giờ, 14 trường hợp AI giải đáp tức thì, 4 lịch hẹn gọi lại buổi sáng.',
+    time: '07:30',
+    type: 'system',
+    isRead: true,
+    targetTab: 'afterhours'
+  },
+  {
+    id: 'notif-5',
+    title: 'Chiến dịch Phát sóng hoàn thành',
+    message: 'Chiến dịch "Bảng giá đất mới 2026" đã gửi thành công tới 14,200 công dân qua Zalo OA & SMS.',
+    time: 'Hôm qua',
+    type: 'system',
+    isRead: true,
+    targetTab: 'broadcast'
+  }
+];
+
 export default function App() {
   // Authentication & Officer Profile State
   const [users, setUsers] = useState<UserProfile[]>(INITIAL_USERS);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(INITIAL_USERS[0]);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
-  const [authModalView, setAuthModalView] = useState<'login' | 'register' | 'forgot' | 'profile'>('login');
+  const [authModalView, setAuthModalView] = useState<'login' | 'register' | 'forgot' | 'profile' | 'channels'>('login');
 
   const [currentTab, setCurrentTab] = useState<TabKey>('inbox');
   const [tickets, setTickets] = useState<TicketItem[]>(INITIAL_TICKETS);
   const [selectedTicket, setSelectedTicket] = useState<TicketItem | null>(INITIAL_TICKETS[0]);
   const [isAfterHoursMode, setIsAfterHoursMode] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [afterHoursRules, setAfterHoursRules] = useState<AfterHoursRule[]>(INITIAL_AFTER_HOURS_RULES);
   const [nightShiftLogs, setNightShiftLogs] = useState<NightShiftLog[]>(INITIAL_NIGHT_SHIFT_LOGS);
   const [faqs, setFaqs] = useState<FAQItem[]>(INITIAL_FAQS);
@@ -93,31 +144,11 @@ export default function App() {
 
   // Toast Notification state
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'urgent' } | null>(null);
-  const [isDataLoading, setIsDataLoading] = useState(true);
+  const [isDataLoading, setIsDataLoading] = useState(false);
   const [dataError, setDataError] = useState<string | null>(null);
 
   useEffect(() => {
-    let active = true;
-    const load = async () => {
-      try {
-        const sessionUser = await authApi.login(INITIAL_USERS[0]);
-        const [apiUsers, apiTickets, apiRules, apiLogs, apiFaqs, apiSnippets, apiBroadcasts, apiReplies] = await Promise.all([
-          userApi.list(), ticketApi.list(), afterHoursApi.rules(), afterHoursApi.logs(), faqApi.list(), faqApi.snippets(), broadcastApi.list(), broadcastApi.replies(), analyticsApi.overview()
-        ]);
-        if (!active) return;
-        setCurrentUser(sessionUser);
-        setUsers(apiUsers); setTickets(apiTickets); setSelectedTicket(apiTickets[0] ?? null);
-        setAfterHoursRules(apiRules); setNightShiftLogs(apiLogs); setFaqs(apiFaqs);
-        setCannedSnippets(apiSnippets); setBroadcasts(apiBroadcasts); setBroadcastReplies(apiReplies);
-        setDataError(null);
-      } catch (error) {
-        if (active) setDataError(error instanceof Error ? error.message : 'Không thể tải dữ liệu từ backend');
-      } finally {
-        if (active) setIsDataLoading(false);
-      }
-    };
-    void load();
-    return () => { active = false; };
+    // API logic temporarily disabled to use mockData instantly
   }, []);
 
   const showToast = (text: string, type: 'success' | 'info' | 'urgent' = 'info') => {
@@ -128,7 +159,7 @@ export default function App() {
   };
 
   // Auth Handlers
-  const handleOpenAuthModal = (view: 'login' | 'register' | 'forgot' | 'profile' = 'login') => {
+  const handleOpenAuthModal = (view: 'login' | 'register' | 'forgot' | 'profile' | 'channels' = 'login') => {
     setAuthModalView(view);
     setIsAuthModalOpen(true);
   };
@@ -681,7 +712,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6f9] text-slate-800 flex flex-col selection:bg-[#a81c1c] selection:text-white">
+    <div className={`min-h-screen bg-[#f4f6f9] dark:bg-slate-900 text-slate-800 dark:text-slate-200 flex flex-col selection:bg-[#a81c1c] selection:text-white ${isDarkMode ? 'dark' : ''}`}>
       
       {/* Top Officer Header */}
       <Header
@@ -689,6 +720,8 @@ export default function App() {
         onSelectTab={handleTabSelect}
         pendingCount={pendingTicketsCount}
         isAfterHoursMode={isAfterHoursMode}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
         onToggleAfterHoursMode={handleToggleAfterHoursMode}
         soundSettings={soundSettings}
         unreadNotificationCount={unreadNotificationCount}
@@ -824,13 +857,7 @@ export default function App() {
               ? 'bg-emerald-50 text-emerald-900 border-emerald-300'
               : 'bg-white text-slate-800 border-slate-300'
           }`}>
-            <i className={`fa-solid ${
-              toastMessage.type === 'urgent'
-                ? 'fa-circle-exclamation text-red-600'
-                : toastMessage.type === 'success'
-                ? 'fa-circle-check text-emerald-600'
-                : 'fa-circle-info text-blue-600'
-            }`}></i>
+            
             <span>{toastMessage.text}</span>
           </div>
         </div>

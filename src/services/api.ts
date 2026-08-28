@@ -1,7 +1,7 @@
 export interface ApiEnvelope<T> { success: true; data: T; meta?: { total: number } }
 export interface ApiFailure { success: false; error: { code: string; message: string } }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api/v1';
 let authToken = localStorage.getItem('govtech_api_token') ?? '';
 
 export class ApiError extends Error {

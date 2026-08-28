@@ -44,8 +44,9 @@ Prisma type không được trả trực tiếp qua API. Mapper chuyển databas
 
 ```bash
 npm install
-npm --prefix server install
 ```
+
+Lệnh cài đặt ở root tự động cài dependency của `server/`.
 
 Tạo `server/.env` từ `server/.env.example` và cấu hình PostgreSQL:
 
@@ -106,7 +107,7 @@ npm run dev
 ```
 
 - Frontend: `http://localhost:3000`
-- API base URL: `http://localhost:3001/api/v1`
+- API base URL từ frontend: `/api/v1` (Vite proxy sang `http://localhost:3001`)
 - Health check: `GET http://localhost:3001/api/health`
 
 Health check thành công:
@@ -124,8 +125,37 @@ Health check thành công:
 npm run lint
 npm run build
 npm --prefix server run typecheck
-npm run build:server
 npm --prefix server run verify
+```
+
+`npm install` generate Prisma Client khi cài dependency. `npm run build` build cả React vào `dist/` và compile Express. Chạy bản production bằng một tiến trình:
+
+```bash
+npm start
+```
+
+Express phục vụ frontend và API trên cùng `PORT`; `/api/*` luôn được xử lý trước SPA fallback.
+
+## Triển khai Google AI Studio / Cloud Run
+
+Đặt các secret/biến môi trường phía server trong cấu hình deployment, không commit giá trị thật:
+
+```env
+NODE_ENV=production
+CLIENT_ORIGIN=https://gov-omnichannel.ai.studio
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?schema=public"
+```
+
+Frontend sử dụng API cùng origin:
+
+```env
+VITE_API_BASE_URL=/api/v1
+```
+
+Áp dụng migration trước khi nhận traffic production:
+
+```bash
+npm --prefix server run db:migrate:deploy
 ```
 
 `verify` sử dụng database được cấu hình trong `DATABASE_URL`, tạo dữ liệu có prefix verification và cleanup sau khi chạy. Không chạy script này trên production database.

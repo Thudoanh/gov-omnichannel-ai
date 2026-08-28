@@ -1,0 +1,336 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  team_lead
+  officer
+  receptionist
+}
+
+enum UserStatus {
+  available
+  busy
+  away
+}
+
+enum ChannelType {
+  zalo
+  facebook
+  dvc
+  hotline
+  email
+  web
+  sms
+}
+
+enum TicketStatus {
+  pending
+  processing
+  resolved
+  auto_resolved
+  scheduled_callback
+}
+
+enum UrgencyLevel {
+  urgent
+  high
+  normal
+  low
+}
+
+enum MessageSender {
+  citizen
+  officer
+  ai_bot
+  system
+}
+
+enum ResolutionType {
+  human
+  ai_auto
+  canned_response
+  after_hours_bot
+}
+
+enum ScheduleType {
+  night_shift
+  weekend
+  holiday
+  all_officers_busy
+}
+
+enum AfterHoursAction {
+  ai_instant_answered
+  scheduled_morning_callback
+  escalated_oncall_officer
+}
+
+enum AfterHoursStatus {
+  pending_morning
+  completed
+  notified
+}
+
+enum CampaignStatus {
+  completed
+  sending
+  scheduled
+  draft
+}
+
+enum BroadcastReplyStatus {
+  new
+  routed_to_inbox
+  replied
+}
+
+model User {
+  id                String      @id
+  username          String      @unique
+  fullName          String
+  email             String      @unique
+  phone             String
+  idCard            String      @unique
+  role              UserRole    @default(officer)
+  title             String
+  department        String
+  badgeNumber       String      @unique
+  avatarInitials    String
+  avatarColor       String
+  status            UserStatus  @default(available)
+  createdAtLabel    String
+  lastLogin         String?
+  isVNeIDVerified   Boolean     @default(false)
+  passwordHash      String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  assignedTickets   Ticket[]    @relation("TicketAssignee")
+  internalNotes     InternalNote[]
+  sessions          Session[]
+
+  @@index([role])
+  @@index([status])
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  tokenHash  String   @unique
+  userId     String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Ticket {
+  id                  String          @id
+  citizenName         String
+  phone               String
+  email               String?
+  channel             ChannelType
+  channelName         String
+  category            String
+  urgency             UrgencyLevel
+  status              TicketStatus
+  createdAtLabel      String
+  updatedAtLabel      String
+  assignedOfficer     String
+  assigneeId          String?
+  lastMessage         String
+  unreadCount         Int?
+  slaDeadlineMinutes  Int?
+  tags                String[]
+  resolvedAtLabel     String?
+  resolutionType      ResolutionType?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  assignee            User?           @relation("TicketAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  messages            Message[]
+  internalNotes       InternalNote[]
+  aiAnalysis          TicketAIAnalysis?
+
+  @@index([status])
+  @@index([channel])
+  @@index([urgency])
+  @@index([category])
+  @@index([createdAt])
+  @@index([assigneeId])
+}
+
+model Message {
+  id           String        @id
+  ticketId     String
+  sender       MessageSender
+  senderName   String?
+  text         String
+  timeLabel    String
+  attachments  Json?
+  isInternal   Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  ticket       Ticket        @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId, createdAt])
+}
+
+model InternalNote {
+  id         String   @id @default(cuid())
+  ticketId   String
+  authorId   String?
+  content    String
+  createdAt  DateTime @default(now())
+  ticket     Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author     User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+  @@index([authorId])
+}
+
+model TicketAIAnalysis {
+  ticketId          String  @id
+  summary           String
+  category          String
+  intent            String
+  urgencyReason     String
+  lawCitation       String
+  suggestedReply    String
+  confidenceScore   Float
+  autoResolvable    Boolean
+  ticket             Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+}
+
+model FAQ {
+  id                     String   @id
+  intentCode             String   @unique
+  title                  String
+  category               String
+  sampleQuestions        String[]
+  keywords               String[]
+  officialAnswer         String
+  legalBasis             String
+  requiredDocuments      String[]
+  processingDays         String
+  fee                    String
+  autoResolutionEnabled  Boolean  @default(false)
+  usageCount             Int      @default(0)
+  accuracyRate           Float    @default(0)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@index([category])
+}
+
+model CannedSnippet {
+  id         String   @id
+  title      String
+  shortcut   String   @unique
+  category   String
+  content    String
+  variables  String[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([category])
+}
+
+model AfterHoursRule {
+  id                    String       @id
+  title                 String
+  scheduleType          ScheduleType
+  activeTimeWindow      String
+  autoReplyTemplate     String
+  createCallbackTicket  Boolean
+  smsZaloConfirmation   Boolean
+  aiBotEnabled          Boolean
+  isActive              Boolean
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+
+  @@index([scheduleType, isActive])
+}
+
+model AfterHoursLog {
+  id                   String             @id
+  citizenName          String
+  phone                String
+  channel              ChannelType
+  receivedAtLabel      String
+  questionSnippet      String
+  actionTaken          AfterHoursAction
+  ticketCode           String             @unique
+  callbackAssignedTo   String
+  callbackTimeTarget   String
+  status               AfterHoursStatus
+  receivedAt           DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  scheduledCallback    ScheduledCallback?
+
+  @@index([status])
+  @@index([actionTaken])
+  @@index([receivedAt])
+}
+
+model ScheduledCallback {
+  id                 String           @id @default(cuid())
+  afterHoursLogId    String           @unique
+  assignedTo         String
+  targetLabel        String
+  status             AfterHoursStatus
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  afterHoursLog      AfterHoursLog    @relation(fields: [afterHoursLogId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+}
+
+model Campaign {
+  id               String          @id
+  title            String
+  category         String
+  targetGroup      String
+  recipientCount   Int
+  channels         ChannelType[]
+  scheduledAt      String
+  status           CampaignStatus
+  contentSnippet   String
+  deliveredCount   Int             @default(0)
+  readCount        Int             @default(0)
+  responseCount    Int             @default(0)
+  failedCount      Int             @default(0)
+  createdAtLabel   String
+  senderOfficer    String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  replies          BroadcastReply[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model BroadcastReply {
+  id                String                @id
+  campaignId        String
+  campaignTitle     String
+  citizenName       String
+  phone             String
+  channel           ChannelType
+  replyText         String
+  receivedAtLabel   String
+  status            BroadcastReplyStatus
+  assignedOfficer   String?
+  receivedAt        DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  campaign          Campaign              @relation(fields: [campaignId], references: [id], onDelete: Restrict)
+
+  @@index([campaignId])
+  @@index([status])
+  @@index([receivedAt])
+}

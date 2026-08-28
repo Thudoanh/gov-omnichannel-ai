@@ -36,26 +36,18 @@ import { AuthModal } from './components/AuthModal';
 import { playSoundByPreset } from './utils/audio';
 import { UserProfile } from './types';
 import { hasTabAccess, ROLE_CONFIGS } from './utils/rbac';
+import { authApi } from './services/authApi';
+import { userApi } from './services/userApi';
+import { ticketApi } from './services/ticketApi';
+import { faqApi } from './services/faqApi';
+import { afterHoursApi } from './services/afterHoursApi';
+import { broadcastApi } from './services/broadcastApi';
+import { analyticsApi } from './services/analyticsApi';
 
 export default function App() {
   // Authentication & Officer Profile State
-  const [users, setUsers] = useState<UserProfile[]>(() => {
-    try {
-      const saved = localStorage.getItem('govtech_users');
-      return saved ? JSON.parse(saved) : INITIAL_USERS;
-    } catch {
-      return INITIAL_USERS;
-    }
-  });
-
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
-    try {
-      const saved = localStorage.getItem('govtech_current_user');
-      return saved ? JSON.parse(saved) : INITIAL_USERS[0];
-    } catch {
-      return INITIAL_USERS[0];
-    }
-  });
+  const [users, setUsers] = useState<UserProfile[]>(INITIAL_USERS);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(INITIAL_USERS[0]);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalView, setAuthModalView] = useState<'login' | 'register' | 'forgot' | 'profile'>('login');
@@ -67,7 +59,7 @@ export default function App() {
   const [afterHoursRules, setAfterHoursRules] = useState<AfterHoursRule[]>(INITIAL_AFTER_HOURS_RULES);
   const [nightShiftLogs, setNightShiftLogs] = useState<NightShiftLog[]>(INITIAL_NIGHT_SHIFT_LOGS);
   const [faqs, setFaqs] = useState<FAQItem[]>(INITIAL_FAQS);
-  const [cannedSnippets] = useState<CannedSnippet[]>(INITIAL_CANNED_SNIPPETS);
+  const [cannedSnippets, setCannedSnippets] = useState<CannedSnippet[]>(INITIAL_CANNED_SNIPPETS);
   const [broadcasts, setBroadcasts] = useState<BroadcastCampaign[]>(INITIAL_BROADCASTS);
   const [broadcastReplies, setBroadcastReplies] = useState<BroadcastReply[]>(INITIAL_BROADCAST_REPLIES);
 
@@ -101,27 +93,32 @@ export default function App() {
 
   // Toast Notification state
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'urgent' } | null>(null);
-
-  // Sync users & current user to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem('govtech_users', JSON.stringify(users));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [users]);
+  const [isDataLoading, setIsDataLoading] = useState(true);
+  const [dataError, setDataError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      if (currentUser) {
-        localStorage.setItem('govtech_current_user', JSON.stringify(currentUser));
-      } else {
-        localStorage.removeItem('govtech_current_user');
+    let active = true;
+    const load = async () => {
+      try {
+        const sessionUser = await authApi.login(INITIAL_USERS[0]);
+        const [apiUsers, apiTickets, apiRules, apiLogs, apiFaqs, apiSnippets, apiBroadcasts, apiReplies] = await Promise.all([
+          userApi.list(), ticketApi.list(), afterHoursApi.rules(), afterHoursApi.logs(), faqApi.list(), faqApi.snippets(), broadcastApi.list(), broadcastApi.replies(), analyticsApi.overview()
+        ]);
+        if (!active) return;
+        setCurrentUser(sessionUser);
+        setUsers(apiUsers); setTickets(apiTickets); setSelectedTicket(apiTickets[0] ?? null);
+        setAfterHoursRules(apiRules); setNightShiftLogs(apiLogs); setFaqs(apiFaqs);
+        setCannedSnippets(apiSnippets); setBroadcasts(apiBroadcasts); setBroadcastReplies(apiReplies);
+        setDataError(null);
+      } catch (error) {
+        if (active) setDataError(error instanceof Error ? error.message : 'Không thể tải dữ liệu từ backend');
+      } finally {
+        if (active) setIsDataLoading(false);
       }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [currentUser]);
+    };
+    void load();
+    return () => { active = false; };
+  }, []);
 
   const showToast = (text: string, type: 'success' | 'info' | 'urgent' = 'info') => {
     setToastMessage({ text, type });
@@ -136,44 +133,51 @@ export default function App() {
     setIsAuthModalOpen(true);
   };
 
-  const handleLogin = (user: UserProfile) => {
-    setCurrentUser(user);
+  const handleLogin = async (user: UserProfile) => {
+    try {
+      const authenticatedUser = await authApi.login(user);
+      setCurrentUser(authenticatedUser);
     // update in users list if exists
     setUsers(prev => {
       const idx = prev.findIndex(u => u.id === user.id);
       if (idx >= 0) {
         const next = [...prev];
-        next[idx] = user;
+        next[idx] = authenticatedUser;
         return next;
       }
-      return [user, ...prev];
+      return [authenticatedUser, ...prev];
     });
-    showToast(`Đăng nhập ca trực thành công: ${user.fullName} (${user.title})`, 'success');
+      showToast(`Đăng nhập ca trực thành công: ${authenticatedUser.fullName} (${authenticatedUser.title})`, 'success');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Đăng nhập thất bại', 'urgent'); }
   };
 
-  const handleRegister = (newUser: UserProfile) => {
-    setUsers(prev => [newUser, ...prev]);
-    setCurrentUser(newUser);
-    showToast(`Đã tạo tài khoản cán bộ thành công: ${newUser.fullName}`, 'success');
+  const handleRegister = async (newUser: UserProfile) => {
+    await handleLogin(newUser);
+    setUsers(prev => prev.some(user => user.id === newUser.id) ? prev : [newUser, ...prev]);
   };
 
-  const handleUpdateProfile = (updatedUser: UserProfile) => {
-    setCurrentUser(updatedUser);
-    setUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
-    showToast('Đã lưu thông tin hồ sơ cán bộ thành công', 'success');
+  const handleUpdateProfile = async (updatedUser: UserProfile) => {
+    try {
+      const saved = await userApi.update(updatedUser.id, updatedUser);
+      setCurrentUser(saved);
+      setUsers(prev => prev.map(u => u.id === saved.id ? saved : u));
+      showToast('Đã lưu thông tin hồ sơ cán bộ thành công', 'success');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể lưu hồ sơ', 'urgent'); }
   };
 
   const handleLogout = () => {
     const prevName = currentUser?.fullName || 'Cán bộ';
     setCurrentUser(null);
+    void authApi.logout().catch(() => undefined);
     showToast(`Đã bàn giao ca trực và đăng xuất: ${prevName}`, 'info');
   };
 
-  const handleStatusChange = (status: 'available' | 'busy' | 'away') => {
+  const handleStatusChange = async (status: 'available' | 'busy' | 'away') => {
     if (currentUser) {
       const updated = { ...currentUser, status };
       setCurrentUser(updated);
       setUsers(prev => prev.map(u => u.id === currentUser.id ? updated : u));
+      try { await userApi.update(currentUser.id, { status }); } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể cập nhật trạng thái', 'urgent'); return; }
       const statusLabel = status === 'available' ? 'Sẵn sàng tiếp nhận' : status === 'busy' ? 'Bận xử lý hồ sơ' : 'Tạm vắng';
       showToast(`Đã đổi trạng thái sang: ${statusLabel}`, 'info');
     }
@@ -257,122 +261,95 @@ export default function App() {
   };
 
   // Ticket Management
-  const handleSendMessage = (ticketId: string, text: string) => {
-    const officerName = currentUser ? `${currentUser.fullName} (${currentUser.title})` : 'Cán bộ trực ban';
-    setTickets(prev =>
-      prev.map(t => {
-        if (t.id === ticketId) {
-          const newMsg = {
-            id: `msg-${Date.now()}`,
-            sender: 'officer' as const,
-            senderName: officerName,
-            text,
-            time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
-          };
-          const updated = {
-            ...t,
-            status: 'processing' as TicketStatus,
-            lastMessage: text,
-            assignedOfficer: currentUser?.fullName || t.assignedOfficer,
-            conversation: [...t.conversation, newMsg]
-          };
-          if (selectedTicket?.id === ticketId) {
-            setSelectedTicket(updated);
-          }
-          return updated;
-        }
-        return t;
-      })
-    );
-    showToast('Đã gửi phản hồi chính thức thành công qua ' + (selectedTicket?.channelName || 'kênh'), 'success');
+  const handleSendMessage = async (ticketId: string, text: string) => {
+    try {
+      const updated = await ticketApi.addMessage(ticketId, text);
+      setTickets(prev => prev.map(ticket => ticket.id === ticketId ? updated : ticket));
+      if (selectedTicket?.id === ticketId) setSelectedTicket(updated);
+      showToast('Đã gửi phản hồi chính thức thành công qua ' + (selectedTicket?.channelName || 'kênh'), 'success');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể gửi phản hồi', 'urgent'); }
   };
 
-  const handleUpdateStatus = (ticketId: string, status: TicketStatus) => {
-    setTickets(prev =>
-      prev.map(t => {
-        if (t.id === ticketId) {
-          const updated = { ...t, status };
-          if (selectedTicket?.id === ticketId) setSelectedTicket(updated);
-          return updated;
-        }
-        return t;
-      })
-    );
-    showToast(`Đã cập nhật trạng thái hồ sơ ${ticketId}`, 'info');
+  const handleUpdateStatus = async (ticketId: string, status: TicketStatus) => {
+    try {
+      const updated = await ticketApi.setStatus(ticketId, status);
+      setTickets(prev => prev.map(ticket => ticket.id === ticketId ? updated : ticket));
+      if (selectedTicket?.id === ticketId) setSelectedTicket(updated);
+      showToast(`Đã cập nhật trạng thái hồ sơ ${ticketId}`, 'info');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể cập nhật hồ sơ', 'urgent'); }
   };
 
-  const handleUpdateInternalNote = (ticketId: string, note: string) => {
-    setTickets(prev =>
-      prev.map(t => {
-        if (t.id === ticketId) {
-          const updated = { ...t, internalNote: note };
-          if (selectedTicket?.id === ticketId) setSelectedTicket(updated);
-          return updated;
-        }
-        return t;
-      })
-    );
-    showToast('Đã lưu ghi chú nội bộ cho chuyên viên', 'success');
+  const handleUpdateInternalNote = async (ticketId: string, note: string) => {
+    try {
+      const updated = await ticketApi.addNote(ticketId, note);
+      setTickets(prev => prev.map(ticket => ticket.id === ticketId ? updated : ticket));
+      if (selectedTicket?.id === ticketId) setSelectedTicket(updated);
+      showToast('Đã lưu ghi chú nội bộ cho chuyên viên', 'success');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể lưu ghi chú', 'urgent'); }
   };
 
   // After Hours Rules & Logs
-  const handleToggleRule = (ruleId: string) => {
-    setAfterHoursRules(prev =>
-      prev.map(r => (r.id === ruleId ? { ...r, isActive: !r.isActive } : r))
-    );
-    showToast('Đã cập nhật kịch bản trực ngoài giờ', 'info');
+  const handleToggleRule = async (ruleId: string) => {
+    const rule = afterHoursRules.find(item => item.id === ruleId);
+    if (!rule) return;
+    try {
+      const updated = await afterHoursApi.updateRule(ruleId, { isActive: !rule.isActive });
+      setAfterHoursRules(prev => prev.map(item => item.id === ruleId ? updated : item));
+      showToast('Đã cập nhật kịch bản trực ngoài giờ', 'info');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể cập nhật kịch bản', 'urgent'); }
   };
 
-  const handleResolveNightLog = (logId: string) => {
-    setNightShiftLogs(prev =>
-      prev.map(l => (l.id === logId ? { ...l, status: 'completed' as const } : l))
-    );
-    showToast('Đã liên hệ hỗ trợ công dân thành công', 'success');
+  const handleResolveNightLog = async (logId: string) => {
+    try {
+      const updated = await afterHoursApi.updateLog(logId, { status: 'completed' });
+      setNightShiftLogs(prev => prev.map(log => log.id === logId ? updated : log));
+      showToast('Đã liên hệ hỗ trợ công dân thành công', 'success');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể cập nhật lịch gọi lại', 'urgent'); }
   };
 
   // FAQ & Knowledge Base
-  const handleToggleFAQAutoResolution = (faqId: string) => {
-    setFaqs(prev =>
-      prev.map(f => (f.id === faqId ? { ...f, autoResolutionEnabled: !f.autoResolutionEnabled } : f))
-    );
-    showToast('Đã thay đổi trạng thái tự động trả lời cho thủ tục', 'info');
+  const handleToggleFAQAutoResolution = async (faqId: string) => {
+    const faq = faqs.find(item => item.id === faqId);
+    if (!faq) return;
+    try {
+      const updated = await faqApi.update(faqId, { autoResolutionEnabled: !faq.autoResolutionEnabled });
+      setFaqs(prev => prev.map(item => item.id === faqId ? updated : item));
+      showToast('Đã thay đổi trạng thái tự động trả lời cho thủ tục', 'info');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể cập nhật FAQ', 'urgent'); }
   };
 
-  const handleAddFAQ = (newFaqData: Omit<FAQItem, 'id' | 'usageCount' | 'accuracyRate'>) => {
-    const newFaq: FAQItem = {
-      ...newFaqData,
-      id: `faq-${Date.now()}`,
-      usageCount: 1,
-      accuracyRate: 99.0
-    };
-    setFaqs(prev => [newFaq, ...prev]);
-    showToast('Đã thêm thủ tục mới vào Kho Tri Thức AI', 'success');
+  const handleAddFAQ = async (newFaqData: Omit<FAQItem, 'id' | 'usageCount' | 'accuracyRate'>) => {
+    try {
+      const newFaq = await faqApi.create({ ...newFaqData, usageCount: 1, accuracyRate: 99.0 });
+      setFaqs(prev => [newFaq, ...prev]);
+      showToast('Đã thêm thủ tục mới vào Kho Tri Thức AI', 'success');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể thêm FAQ', 'urgent'); }
   };
 
   // Mass Broadcast
-  const handleCreateCampaign = (newCampData: Omit<BroadcastCampaign, 'id' | 'deliveredCount' | 'readCount' | 'responseCount' | 'failedCount' | 'createdAt'>) => {
+  const handleCreateCampaign = async (newCampData: Omit<BroadcastCampaign, 'id' | 'deliveredCount' | 'readCount' | 'responseCount' | 'failedCount' | 'createdAt'>) => {
     const delivered = Math.floor(newCampData.recipientCount * 0.98);
     const read = Math.floor(delivered * 0.85);
-    const newCamp: BroadcastCampaign = {
+    const draft: Omit<BroadcastCampaign, 'id'> = {
       ...newCampData,
-      id: `CAMP-2026-0${broadcasts.length + 1}`,
       deliveredCount: delivered,
       readCount: read,
       responseCount: 12,
       failedCount: newCampData.recipientCount - delivered,
       createdAt: 'Vừa xong'
     };
-    setBroadcasts(prev => [newCamp, ...prev]);
-    showToast(`Đã phát sóng thông báo thành công đến ${newCamp.recipientCount} người dân!`, 'success');
+    try {
+      const newCamp = await broadcastApi.create(draft);
+      setBroadcasts(prev => [newCamp, ...prev]);
+      showToast(`Đã phát sóng thông báo thành công đến ${newCamp.recipientCount} người dân!`, 'success');
+    } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể tạo chiến dịch', 'urgent'); }
   };
 
-  const handleRouteReplyToInbox = (replyId: string) => {
+  const handleRouteReplyToInbox = async (replyId: string) => {
     const reply = broadcastReplies.find(r => r.id === replyId);
-    setBroadcastReplies(prev =>
-      prev.map(r => (r.id === replyId ? { ...r, status: 'routed_to_inbox' as const } : r))
-    );
 
     if (reply) {
+      try {
       // Create real ticket from broadcast reply
       const newTicketId = `TKT-REPLY-${Date.now().toString().slice(-4)}`;
       const channelBadgeMap: Record<string, string> = {
@@ -423,8 +400,10 @@ export default function App() {
         }
       };
 
-      setTickets(prev => [newTicket, ...prev]);
-      setSelectedTicket(newTicket);
+      const result = await broadcastApi.routeReplyToTicket(replyId, newTicket);
+      setBroadcastReplies(prev => prev.map(item => item.id === replyId ? result.reply : item));
+      setTickets(prev => [result.ticket, ...prev]);
+      setSelectedTicket(result.ticket);
       
       const newNotif: AppNotification = {
         id: `notif-${Date.now()}`,
@@ -438,6 +417,7 @@ export default function App() {
       };
       setNotifications(prev => [newNotif, ...prev]);
       showToast(`Đã tạo hồ sơ #${newTicketId} và chuyển vào Hộp Thư tiếp nhận!`, 'success');
+      } catch (error) { showToast(error instanceof Error ? error.message : 'Không thể chuyển phản hồi', 'urgent'); }
     } else {
       showToast('Đã chuyển phản hồi của công dân vào Hàng đợi tiếp nhận chung', 'success');
     }
@@ -502,8 +482,10 @@ export default function App() {
           }
         };
 
-        setTickets(prev => [newTicket, ...prev]);
-        setSelectedTicket(newTicket);
+        void ticketApi.create(newTicket).then(savedTicket => {
+          setTickets(prev => [savedTicket, ...prev]);
+          setSelectedTicket(savedTicket);
+        }).catch(error => showToast(error instanceof Error ? error.message : 'Không thể tạo hồ sơ', 'urgent'));
         setCurrentTab('inbox');
         showToast(`Đã chuyển nhật ký trực đêm thành hồ sơ #${newTicketId}!`, 'success');
       } else {
@@ -537,7 +519,7 @@ export default function App() {
       status: isAutoRes ? 'completed' : 'pending_morning'
     };
 
-    setNightShiftLogs(prev => [newLog, ...prev]);
+    void afterHoursApi.createLog(newLog).then(savedLog => setNightShiftLogs(prev => [savedLog, ...prev])).catch(error => showToast(error instanceof Error ? error.message : 'Không thể lưu nhật ký trực đêm', 'urgent'));
 
     // Also add to tickets queue
     const newTicket: TicketItem = {
@@ -581,7 +563,7 @@ export default function App() {
       }
     };
 
-    setTickets(prev => [newTicket, ...prev]);
+    void ticketApi.create(newTicket).then(savedTicket => setTickets(prev => [savedTicket, ...prev])).catch(error => showToast(error instanceof Error ? error.message : 'Không thể lưu hồ sơ trực đêm', 'urgent'));
 
     // Add notification
     const newNotif: AppNotification = {
@@ -671,8 +653,10 @@ export default function App() {
       }
     };
 
-    setTickets(prev => [newTicket, ...prev]);
-    setSelectedTicket(newTicket);
+    void ticketApi.create(newTicket).then(savedTicket => {
+      setTickets(prev => [savedTicket, ...prev]);
+      setSelectedTicket(savedTicket);
+    }).catch(error => showToast(error instanceof Error ? error.message : 'Không thể tạo hồ sơ thử nghiệm', 'urgent'));
     setCurrentTab('inbox');
     showToast(`Đã tạo hồ sơ thử nghiệm #${testTicketId} trong Hộp Thư!`, 'success');
   };
@@ -688,7 +672,7 @@ export default function App() {
   const unreadNotificationCount = notifications.filter(n => !n.isRead).length;
 
   const handleTabSelect = (tab: TabKey) => {
-    if (currentUser && !hasTabAccess(currentUser.role, tab)) {
+    if (currentUser && !hasTabAccess(currentUser, tab)) {
       const roleLabel = ROLE_CONFIGS[currentUser.role]?.shortLabel || currentUser.role;
       showToast(`Tài khoản vai trò [${roleLabel}] không có quyền truy cập chức năng này.`, 'urgent');
       return;
@@ -717,6 +701,16 @@ export default function App() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-[1600px] w-full mx-auto p-3 sm:p-5 lg:p-6">
+        {isDataLoading && (
+          <div className="mb-3 border border-slate-200 bg-white px-4 py-3 text-xs font-semibold text-slate-600" role="status">
+            Đang đồng bộ dữ liệu nghiệp vụ từ máy chủ...
+          </div>
+        )}
+        {dataError && (
+          <div className="mb-3 border border-amber-300 bg-amber-50 px-4 py-3 text-xs text-amber-900" role="alert">
+            Backend chưa sẵn sàng: {dataError}. Giao diện đang dùng dữ liệu mẫu dự phòng.
+          </div>
+        )}
         
         {/* Pain Point 1: Unified Omnichannel Inbox */}
         {currentTab === 'inbox' && (
